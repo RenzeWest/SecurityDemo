@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#121b34" />
+  <meta name="description" content="CampusCreate: een fictieve demo-webshop voor studentenkorting op creatieve software." />
+  <title>CampusCreate — Creatieve software voor studenten (demo)</title>
+  <style>
+    :root {
+      --ink: #111a30;
+      --muted: #627089;
+      --navy: #131c34;
+      --navy-2: #202a47;
+      --purple: #6946f5;
+      --purple-soft: #eeeaff;
+      --lime: #d5ff73;
+      --paper: #f7f8fc;
+      --white: #fff;
+      --border: #e6e9f1;
+      --shadow: 0 18px 55px rgba(26, 37, 72, .09);
+      --radius: 23px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid #b9a8ff; outline-offset: 3px; }
+    .container { width: min(1170px, calc(100% - 44px)); margin: auto; }
+    .banner { text-align: center; background: #e9e4ff; color: #42329e; padding: 8px 16px; font-size: 12px; font-weight: 750; letter-spacing: .015em; }
+    header { position: sticky; z-index: 30; top: 0; background: rgba(255,255,255,.95); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); }
+    .nav { height: 78px; display: flex; align-items: center; gap: 30px; }
+    .logo { display: inline-flex; align-items: center; gap: 10px; font-size: 23px; font-weight: 850; letter-spacing: -.9px; white-space: nowrap; }
+    .logo-mark { display: grid; place-items: center; background: var(--purple); color: white; width: 38px; height: 38px; border-radius: 13px; transform: rotate(-8deg); font-size: 21px; }
+    .logo span:last-child { color: var(--purple); }
+    .nav-links { display: flex; gap: 27px; align-items: center; margin-left: auto; font-size: 14px; color: #3f4a64; font-weight: 650; }
+    .nav-links a:hover { color: var(--purple); }
+    .basket-button { display: inline-flex; gap: 10px; align-items: center; justify-content: center; border: 1px solid var(--border); background: white; color: var(--ink); padding: 10px 13px; border-radius: 12px; font-weight: 750; font-size: 14px; }
+    .basket-icon { width: 19px; height: 19px; }
+    .count { width: 23px; height: 23px; display: inline-grid; place-items: center; background: var(--purple); color: white; border-radius: 8px; font-size: 12px; }
+    .hero { background: var(--navy); color: white; position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; width: 440px; height: 440px; border-radius: 50%; background: #6946f5; filter: blur(100px); opacity: .28; right: -120px; top: -145px; }
+    .hero-inner { padding-top: 78px; padding-bottom: 82px; display: grid; grid-template-columns: 1.1fr .9fr; gap: 70px; align-items: center; position: relative; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 7px; background: rgba(213,255,115,.11); border: 1px solid rgba(213,255,115,.32); color: var(--lime); font-size: 12px; font-weight: 850; text-transform: uppercase; letter-spacing: .12em; padding: 9px 13px; border-radius: 100px; }
+    h1 { font-size: clamp(44px, 5.4vw, 72px); line-height: 1.06; letter-spacing: -.06em; margin: 24px 0 20px; max-width: 720px; }
+    h1 em { color: var(--lime); font-style: normal; }
+    .hero p { font-size: 17px; color: #c6cee1; line-height: 1.7; margin: 0 0 28px; max-width: 510px; }
+    .hero-actions { display: flex; gap: 13px; align-items: center; flex-wrap: wrap; }
+    .btn { border: 0; border-radius: 13px; min-height: 49px; padding: 13px 20px; font-size: 14px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; gap: 9px; transition: transform .15s, background .15s; }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { background: var(--lime); color: #162332; }
+    .btn-light { background: white; color: var(--purple); }
+    .btn-purple { background: var(--purple); color: white; }
+    .btn-outline { border: 1px solid #4b5674; background: transparent; color: white; }
+    .hero-note { display: flex; align-items: center; gap: 7px; margin-top: 25px; color: #aab7d0; font-size: 12px; }
+    .hero-graphic { position: relative; height: 390px; display: grid; place-items: center; }
+    .halo { position: absolute; width: 360px; height: 360px; border-radius: 50%; border: 1px solid rgba(255,255,255,.13); }
+    .halo::after { content: ''; position: absolute; inset: 35px; border: 1px dashed rgba(255,255,255,.14); border-radius: 50%; }
+    .software-tile { display: grid; place-items: center; position: absolute; width: 124px; height: 124px; border-radius: 28px; border: 2px solid rgba(255,255,255,.16); font-size: 57px; font-weight: 800; box-shadow: 0 23px 45px #05091d60; transform: rotate(var(--rot, 0deg)); }
+    .tile-ps { left: 20px; top: 37px; --rot: -13deg; background: #081e3f; color: #74c8ff; }
+    .tile-ai { right: 34px; top: 18px; --rot: 11deg; background: #38200d; color: #ffae58; }
+    .tile-pr { left: 67px; bottom: 13px; --rot: 8deg; background: #2c1947; color: #dfb4ff; }
+    .tile-cc { right: 10px; bottom: 54px; --rot: -9deg; background: #ffedf1; color: #ff436b; font-size: 51px; }
+    .discount-sticker { width: 157px; height: 157px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--lime); color: #1d2832; z-index: 2; box-shadow: 0 18px 50px #0c102c50; transform: rotate(9deg); }
+    .discount-sticker strong { font-size: 44px; line-height: 1; letter-spacing: -.07em; }
+    .discount-sticker span { font-weight: 850; font-size: 13px; letter-spacing: -.02em; margin-top: 3px; }
+    .features { padding: 26px 0; border-bottom: 1px solid var(--border); background: white; }
+    .features-inner { display: flex; gap: 20px; justify-content: space-between; }
+    .feature { display: flex; align-items: center; gap: 12px; font-size: 13px; color: #3f4c67; font-weight: 700; }
+    .feature-symbol { color: var(--purple); background: var(--purple-soft); display: grid; place-items: center; border-radius: 11px; width: 36px; height: 36px; font-size: 19px; }
+    section.catalog { padding: 84px 0 90px; }
+    .section-top { display: flex; justify-content: space-between; gap: 24px; align-items: end; margin-bottom: 27px; }
+    .section-kicker { font-size: 12px; text-transform: uppercase; font-weight: 850; color: var(--purple); letter-spacing: .13em; }
+    h2 { font-size: clamp(29px, 3vw, 39px); line-height: 1.15; margin: 9px 0 10px; letter-spacing: -.05em; }
+    .subtext { margin: 0; color: var(--muted); font-size: 15px; }
+    .search-wrap { position: relative; width: min(285px, 100%); }
+    .search-wrap svg { position: absolute; top: 14px; left: 14px; width: 18px; height: 18px; color: #7a86a0; }
+    .search-wrap input { width: 100%; height: 47px; border: 1px solid var(--border); background: white; border-radius: 12px; padding: 0 14px 0 42px; outline: none; }
+    .search-wrap input:focus { border-color: var(--purple); }
+    .filter-bar { display: flex; gap: 9px; flex-wrap: wrap; margin-bottom: 24px; }
+    .filter { border: 1px solid #e4e6ef; background: white; padding: 10px 17px; font-size: 13px; font-weight: 750; color: #58637d; border-radius: 100px; }
+    .filter.active { color: white; background: var(--navy); border-color: var(--navy); }
+    .product-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+    .product { background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 25px; display: flex; flex-direction: column; box-shadow: 0 7px 20px #101a3010; transition: transform .18s, box-shadow .18s; min-height: 345px; }
+    .product:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .product-head { display: flex; justify-content: space-between; align-items: start; }
+    .app-icon { width: 65px; height: 65px; display: grid; place-items: center; border-radius: 17px; font-size: 26px; font-weight: 800; letter-spacing: -.07em; }
+    .app-icon.ps { background: #e2f2ff; color: #0962c3; }
+    .app-icon.ai { background: #fff0df; color: #bc5b08; }
+    .app-icon.pr { background: #f2e8ff; color: #7631cd; }
+    .app-icon.ac { background: #ffe6e7; color: #d72842; }
+    .app-icon.cc { background: #ffe6f0; color: #e3286f; }
+    .app-icon.id { background: #ffe5f4; color: #b12b80; }
+    .tag { color: #7046dc; background: #f0ecff; padding: 6px 10px; border-radius: 7px; font-size: 11px; font-weight: 850; }
+    .product h3 { font-size: 20px; letter-spacing: -.045em; margin: 20px 0 6px; }
+    .product p { color: var(--muted); font-size: 13px; line-height: 1.6; margin: 0 0 25px; min-height: 42px; }
+    .price-block { display: flex; align-items: end; gap: 9px; margin-top: auto; }
+    .price { font-weight: 850; font-size: 29px; letter-spacing: -.06em; line-height: 1; }
+    .period { color: #78829a; font-size: 12px; margin-bottom: 3px; }
+    .old-price { font-size: 13px; color: #98a0b3; text-decoration: line-through; margin-left: auto; margin-bottom: 3px; }
+    .product .btn { margin-top: 18px; width: 100%; }
+    .empty { display: none; text-align: center; color: var(--muted); padding: 55px 0; }
+    .about { padding: 65px 0 82px; }
+    .about-card { background: #eae7ff; border-radius: 28px; display: grid; grid-template-columns: .9fr 1.1fr; gap: 50px; padding: 55px 64px; align-items: center; }
+    .about-card h2 { margin: 0 0 15px; }
+    .about-card p { color: #5b577a; margin: 0; line-height: 1.8; }
+    .steps { display: grid; gap: 17px; }
+    .step { display: flex; gap: 15px; align-items: start; }
+    .step-number { background: white; color: var(--purple); font-size: 14px; font-weight: 900; flex: 0 0 37px; width: 37px; height: 37px; display: grid; place-items: center; border-radius: 12px; }
+    .step strong { display: block; margin-bottom: 2px; }
+    .step small { color: #66617f; font-size: 13px; }
+    footer { padding: 33px 0; background: var(--navy); color: #c1cada; }
+    .foot { display: flex; justify-content: space-between; align-items: center; gap: 24px; }
+    .foot .logo { color: white; font-size: 20px; }
+    .foot p { font-size: 12px; line-height: 1.7; max-width: 510px; margin: 0; }
+    .footer-right { font-size: 12px; white-space: nowrap; }
+    .backdrop { position: fixed; inset: 0; background: #0b1124a6; z-index: 39; opacity: 0; visibility: hidden; transition: opacity .2s, visibility .2s; }
+    .backdrop.open { opacity: 1; visibility: visible; }
+    .drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(450px, 100%); background: white; box-shadow: -15px 0 70px #070d2d30; z-index: 40; transform: translateX(105%); transition: transform .25s ease; display: flex; flex-direction: column; }
+    .drawer.open { transform: translateX(0); }
+    .drawer-heading { display: flex; align-items: center; justify-content: space-between; padding: 25px; border-bottom: 1px solid var(--border); }
+    .drawer-heading h2 { margin: 0; font-size: 24px; }
+    .close { border: 0; background: #f1f2f7; font-size: 20px; border-radius: 10px; width: 36px; height: 36px; }
+    .cart-items { overflow: auto; padding: 20px 25px; flex: 1; }
+    .cart-empty { text-align: center; padding: 45px 12px; color: var(--muted); }
+    .cart-empty span { display: block; font-size: 38px; margin-bottom: 12px; }
+    .cart-line { display: flex; align-items: center; gap: 13px; padding: 15px 0; border-bottom: 1px solid var(--border); }
+    .cart-line .app-icon { width: 45px; height: 45px; border-radius: 11px; font-size: 19px; flex: 0 0 45px; }
+    .cart-line-detail { flex: 1; }
+    .cart-line-detail strong { display: block; font-size: 14px; }
+    .cart-line-detail small { color: var(--muted); font-size: 12px; }
+    .remove { border: 0; background: transparent; color: #aa3e68; font-size: 12px; font-weight: 700; padding: 6px; }
+    .cart-bottom { border-top: 1px solid var(--border); padding: 25px; }
+    .total { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; }
+    .total strong { font-size: 23px; }
+    .cart-bottom small { color: var(--muted); display: block; margin-bottom: 18px; font-size: 12px; }
+    .cart-bottom .btn { width: 100%; }
+    .cart-bottom .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+    .toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 90px); opacity: 0; z-index: 60; border-radius: 14px; background: #202b46; color: white; padding: 14px 20px; box-shadow: var(--shadow); font-size: 14px; max-width: calc(100% - 30px); text-align: center; pointer-events: none; transition: opacity .2s, transform .2s; }
+    .toast.show { transform: translate(-50%, 0); opacity: 1; }
+    @media (max-width: 950px) { .hero-inner { gap: 20px; } .hero-graphic { transform: scale(.86); transform-origin: center; } .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .nav-links { gap: 12px; } }
+    @media (max-width: 700px) { .container { width: min(100% - 32px, 540px); } .nav { height: 70px; gap: 10px; } .nav-links { display: none; } .nav .basket-button { margin-left: auto; } .logo { font-size: 19px; } .hero-inner { display: flex; flex-direction: column; gap: 0; padding: 55px 0 34px; } .hero-graphic { height: 280px; width: 100%; max-width: 440px; transform: scale(.68); margin: -26px 0 -38px; } h1 { font-size: clamp(40px, 11vw, 60px); } .features-inner { flex-wrap: wrap; gap: 14px; } .feature { flex: 1 1 43%; font-size: 11px; } section.catalog { padding: 60px 0 30px; } .section-top { display: block; } .search-wrap { margin-top: 20px; width: 100%; } .product-grid { grid-template-columns: 1fr; } .product { min-height: 0; } .about { padding: 36px 0 64px; } .about-card { grid-template-columns: 1fr; gap: 28px; padding: 34px 27px; } .foot { align-items: start; flex-direction: column; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; } }
+  </style>
+</head>
+<body>
+  <div class="banner">DEMO-WEBSITE · Fictieve prijzen en kortingen · Niet verbonden aan Adobe · Geen echte aankopen</div>
+  <header>
+    <div class="container nav">
+      <a href="#top" class="logo" aria-label="CampusCreate startpagina"><span class="logo-mark">✳</span>Campus<span>Create</span></a>
+      <nav class="nav-links" aria-label="Hoofdnavigatie">
+        <a href="#software">Software</a><a href="#uitleg">Hoe werkt het?</a><a href="#onderaan">Over deze demo</a>
+      </nav>
+      <button class="basket-button" id="openCart" aria-label="Open winkelmandje"><svg class="basket-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3h2l2.4 11.4a2 2 0 0 0 2 1.6H20l2-9H6"/><circle cx="10" cy="20" r="1"/><circle cx="19" cy="20" r="1"/></svg> Mandje <span class="count" id="cartCount">0</span></button>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="container hero-inner">
+        <div>
+          <div class="eyebrow">✦ Voor creatieve studenten</div>
+          <h1>Jouw ideeën zijn <em>meer waard</em> dan de volle prijs.</h1>
+          <p>Ontdek creatieve software voor je volgende project, presentatie of portfolio. Bekijk voorbeelddeals voor studenten en bouw jouw ideale toolkit.</p>
+          <div class="hero-actions"><a class="btn btn-primary" href="#software">Ontdek studentendeals <span aria-hidden="true">↗</span></a><a class="btn btn-outline" href="#uitleg">Hoe werkt het?</a></div>
+          <div class="hero-note">✓ Dit is een interactieve oefenwebshop. Er wordt niets verkocht of betaald.</div>
+        </div>
+        <div class="hero-graphic" aria-hidden="true">
+          <div class="halo"></div><div class="software-tile tile-ps">Ps</div><div class="software-tile tile-ai">Ai</div><div class="software-tile tile-pr">Pr</div><div class="software-tile tile-cc">Cc</div>
+          <div class="discount-sticker"><strong>50%</strong><span>DEMO-KORTING</span></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="features">
+      <div class="container features-inner">
+        <div class="feature"><span class="feature-symbol">✦</span> Gemaakt voor studenten</div>
+        <div class="feature"><span class="feature-symbol">◈</span> Creatieve software</div>
+        <div class="feature"><span class="feature-symbol">✓</span> Heldere demo-prijzen</div>
+        <div class="feature"><span class="feature-symbol">♡</span> Geen betaalgegevens nodig</div>
+      </div>
+    </div>
+
+    <section class="catalog" id="software">
+      <div class="container">
+        <div class="section-top">
+          <div><div class="section-kicker">Software die met je meegroeit</div><h2>Welke tool past bij jou?</h2><p class="subtext">Alle bedragen zijn fictieve voorbeelden per maand, geen echte aanbiedingen.</p></div>
+          <label class="search-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="search" type="search" placeholder="Zoek software..." aria-label="Zoek software" /></label>
+        </div>
+        <div class="filter-bar" role="group" aria-label="Filter categorieën">
+          <button type="button" class="filter active" data-filter="all" aria-pressed="true">Alles</button>
+          <button type="button" class="filter" data-filter="design" aria-pressed="false">Design</button>
+          <button type="button" class="filter" data-filter="video" aria-pressed="false">Video & motion</button>
+          <button type="button" class="filter" data-filter="productivity" aria-pressed="false">Documenten</button>
+          <button type="button" class="filter" data-filter="bundle" aria-pressed="false">Alles-in-één</button>
+        </div>
+        <div class="product-grid" id="products" aria-live="polite"></div>
+        <p id="emptyState" class="empty">Geen software gevonden. Probeer een andere zoekterm.</p>
+      </div>
+    </section>
+
+    <section class="about" id="uitleg">
+      <div class="container">
+        <div class="about-card">
+          <div><div class="section-kicker">Zo werkt de demo</div><h2>Van idee naar jouw creatieve toolkit.</h2><p>Ontdek op een simpele manier hoe een studentenwebshop eruit kan zien. Je kunt producten bekijken, filteren en toevoegen aan je winkelmandje. Afrekenen is uitsluitend een simulatie.</p></div>
+          <div class="steps"><div class="step"><span class="step-number">01</span><div><strong>Ontdek je tools</strong><small>Filter op categorie of zoek een specifiek programma.</small></div></div><div class="step"><span class="step-number">02</span><div><strong>Stel je pakket samen</strong><small>Voeg één of meer demo-abonnementen toe aan je mandje.</small></div></div><div class="step"><span class="step-number">03</span><div><strong>Probeer de checkout</strong><small>Bekijk een demo-bevestiging, zonder login of betaling.</small></div></div></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="onderaan"><div class="container foot"><a href="#top" class="logo"><span class="logo-mark">✳</span>Campus<span>Create</span></a><p>CampusCreate is een fictieve demo voor webdesign. Adobe, Photoshop, Illustrator, Premiere Pro, InDesign, Acrobat en Creative Cloud zijn namen van Adobe-producten. Deze site is niet gelieerd aan of goedgekeurd door Adobe. Prijzen zijn verzonnen.</p><div class="footer-right">© 2026 CampusCreate · Demo</div></div></footer>
+
+  <div class="backdrop" id="backdrop"></div>
+  <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="cartTitle" aria-hidden="true">
+    <div class="drawer-heading"><h2 id="cartTitle">Jouw mandje</h2><button class="close" id="closeCart" aria-label="Sluit winkelmandje">×</button></div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-bottom"><div class="total"><span>Demo-totaal per maand</span><strong id="cartTotal">€ 0,00</strong></div><small>Fictief bedrag. Er worden geen betalingen verwerkt.</small><button id="checkout" class="btn btn-purple" disabled>Simuleer bestelling →</button></div>
+  </aside>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // Alle producten en prijzen zijn verzonnen en dienen alleen als demo.
+    const products = [
+      { id: 'cc', short: 'Cc', type: 'cc', name: 'Creative Cloud All Apps', description: 'Een complete creatieve gereedschapskist voor al jouw projecten.', price: 19.99, old: 39.99, tag: 'Populair', category: 'bundle' },
+      { id: 'ps', short: 'Ps', type: 'ps', name: 'Adobe Photoshop', description: 'Bewerk foto’s, maak social visuals en geef ideeën vorm.', price: 9.99, old: 19.99, tag: '50% demo-korting', category: 'design' },
+      { id: 'ai', short: 'Ai', type: 'ai', name: 'Adobe Illustrator', description: 'Ontwerp logo’s, illustraties, posters en iconen.', price: 9.99, old: 19.99, tag: '50% demo-korting', category: 'design' },
+      { id: 'pr', short: 'Pr', type: 'pr', name: 'Adobe Premiere Pro', description: 'Monteer video’s voor school, stage of je eigen kanalen.', price: 12.99, old: 25.99, tag: 'Studentenfavoriet', category: 'video' },
+      { id: 'ac', short: 'Ac', type: 'ac', name: 'Adobe Acrobat Pro', description: 'Maak, bewerk en organiseer PDF-documenten.', price: 7.99, old: 15.99, tag: 'Demo-deal', category: 'productivity' },
+      { id: 'id', short: 'Id', type: 'id', name: 'Adobe InDesign', description: 'Maak magazines, verslagen en professionele layouts.', price: 9.99, old: 19.99, tag: '50% demo-korting', category: 'design' }
+    ];
+    const euro = amount => new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(amount);
+    let activeFilter = 'all';
+    const cart = new Set();
+    const grid = document.getElementById('products');
+    const searchInput = document.getElementById('search');
+    const emptyState = document.getElementById('emptyState');
+    const drawer = document.getElementById('drawer');
+    const backdrop = document.getElementById('backdrop');
+    const cartItems = document.getElementById('cartItems');
+    const cartCount = document.getElementById('cartCount');
+    const cartTotal = document.getElementById('cartTotal');
+    const checkout = document.getElementById('checkout');
+    const toast = document.getElementById('toast');
+    let toastTimer;
+    let lastFocus = null;
+
+    function renderProducts() {
+      const query = searchInput.value.trim().toLocaleLowerCase('nl-NL');
+      const visible = products.filter(p => (activeFilter === 'all' || p.category === activeFilter) && (p.name + ' ' + p.description).toLocaleLowerCase('nl-NL').includes(query));
+      grid.innerHTML = visible.map(p => `
+        <article class="product">
+          <div class="product-head"><div class="app-icon ${p.type}" aria-hidden="true">${p.short}</div><span class="tag">${p.tag}</span></div>
+          <h3>${p.name}</h3><p>${p.description}</p>
+          <div class="price-block"><span class="price">${euro(p.price)}</span><span class="period">/ maand</span><span class="old-price">${euro(p.old)}</span></div>
+          <button class="btn ${cart.has(p.id) ? 'btn-light' : 'btn-purple'}" type="button" data-add="${p.id}" aria-label="${cart.has(p.id) ? 'Verwijder ' + p.name + ' uit' : 'Voeg ' + p.name + ' toe aan'} winkelmandje">${cart.has(p.id) ? '✓ Toegevoegd · verwijderen' : '+ In winkelmandje'}</button>
+        </article>`).join('');
+      emptyState.style.display = visible.length ? 'none' : 'block';
+    }
+
+    function renderCart() {
+      const items = products.filter(p => cart.has(p.id));
+      cartCount.textContent = items.length;
+      cartTotal.textContent = euro(items.reduce((total, p) => total + p.price, 0));
+      checkout.disabled = !items.length;
+      cartItems.innerHTML = items.length ? items.map(p => `
+        <div class="cart-line"><div class="app-icon ${p.type}" aria-hidden="true">${p.short}</div><div class="cart-line-detail"><strong>${p.name}</strong><small>${euro(p.price)} / maand</small></div><button type="button" class="remove" data-remove="${p.id}" aria-label="Verwijder ${p.name}">Verwijder</button></div>`).join('') : '<div class="cart-empty"><span>🛒</span>Je winkelmandje is nog leeg.<br>Ontdek jouw favoriete software!</div>';
+      renderProducts();
+    }
+
+    function toggleCart(open) {
+      if (open) lastFocus = document.activeElement;
+      drawer.classList.toggle('open', open);
+      backdrop.classList.toggle('open', open);
+      drawer.setAttribute('aria-hidden', String(!open));
+      document.body.style.overflow = open ? 'hidden' : '';
+      if (open) document.getElementById('closeCart').focus();
+      else if (lastFocus && lastFocus.isConnected) lastFocus.focus();
+    }
+    function announce(message) {
+      clearTimeout(toastTimer);
+      toast.textContent = message;
+      toast.classList.add('show');
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 3300);
+    }
+
+    grid.addEventListener('click', event => {
+      const button = event.target.closest('[data-add]');
+      if (!button) return;
+      const id = button.dataset.add;
+      const p = products.find(x => x.id === id);
+      if (cart.has(id)) { cart.delete(id); announce(`${p.name} verwijderd uit je mandje.`); }
+      else { cart.add(id); announce(`${p.name} toegevoegd aan je mandje.`); }
+      renderCart();
+    });
+    cartItems.addEventListener('click', event => {
+      const button = event.target.closest('[data-remove]');
+      if (!button) return;
+      cart.delete(button.dataset.remove);
+      renderCart();
+    });
+    document.querySelectorAll('[data-filter]').forEach(button => button.addEventListener('click', () => {
+      activeFilter = button.dataset.filter;
+      document.querySelectorAll('[data-filter]').forEach(b => { b.classList.toggle('active', b === button); b.setAttribute('aria-pressed', String(b === button)); });
+      renderProducts();
+    }));
+    searchInput.addEventListener('input', renderProducts);
+    document.getElementById('openCart').addEventListener('click', () => toggleCart(true));
+    document.getElementById('closeCart').addEventListener('click', () => toggleCart(false));
+    backdrop.addEventListener('click', () => toggleCart(false));
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && drawer.classList.contains('open')) toggleCart(false);
+      if (event.key === 'Tab' && drawer.classList.contains('open')) {
+        const focusable = [...drawer.querySelectorAll('button:not(:disabled)')];
+        const first = focusable[0]; const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+      }
+    });
+    checkout.addEventListener('click', () => {
+      if (cart.size === 0) return;
+      cart.clear();
+      renderCart();
+      toggleCart(false);
+      announce('Demo-bestelling geslaagd! Er is niets gekocht of betaald.');
+    });
+    renderCart();
+  </script>
+</body>
+</html>
